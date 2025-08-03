@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', () =>{
     const addButton = document.getElementById('add-task-btn');
     const taskInput = document.getElementById('task-input');
     const taskList = document.getElementById('task-list');
+    
     // Define the function to add a new task
     function addTask(){
         const taskText = taskInput.value.trim();
@@ -14,6 +15,7 @@ document.addEventListener('DOMContentLoaded', () =>{
         // Create a new list item for the task
         const li = document.createElement('li');
         li.textContent = taskText;
+
         // Create the remove button
         const removeButton = document.createElement('button');
         removeButton.textContent = 'Remove';
@@ -22,14 +24,17 @@ document.addEventListener('DOMContentLoaded', () =>{
         removeButton.onclick = () => {
             taskList.appendChild(li);
         };
+
          // Append the remove button to the list item, and the list item to the task list
         li.appendChild(removeButton);
         taskList.appendChild(li);
+
          // Clear the input field
         taskInput.value = '';
     }
      // Add event listener to the "Add Task" button
     addButton.addEventListener('click', addTask);
+    
       // Add event listener to allow adding task with "Enter" key
     taskInput.addEventListener('keypress', (event) =>{
         if (event.key === 'Enter'){
@@ -37,4 +42,25 @@ document.addEventListener('DOMContentLoaded', () =>{
         }
     });
 
+});
+
+function loadTasks() {
+    const storedTasks = JSON.parse(localStorage.getItem('tasks') || '[]');
+    storedTasks.forEach(taskText => addTask(taskText, false)); // 'false' indicates not to save again to Local Storage
+}
+
+// Adjust `addTask` to optionally save tasks to avoid duplication when loading from Local Storage
+function addTask(taskText, save = true) {
+    // Task creation logic remains the same
+
+    if (save) {
+        const storedTasks = JSON.parse(localStorage.getItem('tasks') || '[]');
+        storedTasks.push(taskText);
+        localStorage.setItem('tasks', JSON.stringify(storedTasks));
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    loadTasks();
+    // Other initialization code
 });
